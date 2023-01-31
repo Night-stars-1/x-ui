@@ -34,49 +34,56 @@ func NewStatsNotifyJob() *StatsNotifyJob {
 
 func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 	//Telegram bot basic info
-	tgBottoken, err := j.settingService.GetTgBotToken()
+	tgBotenabled, err := j.settingService.GetTgbotenabled()
 	if err != nil {
-		logger.Warning("sendMsgToTgbot failed,GetTgBotToken fail:", err)
+		logger.Warning("sendMsgToTgbot failed,GetTgbotenabled fail:", err)
 		return
 	}
-	certFile, err := j.settingService.GetCertFile()
-	if err != nil {
-		logger.Warning("sendMsgToTgbot failed,GetCertFile fail:", err)
-		return
-	}
-	tgBotid, err := j.settingService.GetTgBotChatId()
-	if err != nil {
-		logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
-		return
-	}
-	botCertFile := tgbotapi.FilePath(certFile)
-	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+tgBottoken, botCertFile)
-	bot, err := tgbotapi.NewBotAPI(tgBottoken)
-	if err != nil {
-		fmt.Println("get tgbot error:", err)
-		//return
-	}
-	bot.Debug = true
-	fmt.Printf("Authorized on account %s", bot.Self.UserName)
-	_, err = bot.Request(wh)
-	if err != nil {
-		fmt.Println(err)
-	}
-	info, err := bot.GetWebhookInfo()
-	if err != nil {
-		fmt.Println(err)
-	}
-	if info.LastErrorDate != 0 {
-		fmt.Println("Telegram callback failed: %s", info.LastErrorMessage)
-	}
-	updates := bot.ListenForWebhook("/" + bot.Token)
+	if tgBotenabled == true {
+		tgBottoken, err := j.settingService.GetTgBotToken()
+		if err != nil {
+			logger.Warning("sendMsgToTgbot failed,GetTgBotToken fail:", err)
+			return
+		}
+		certFile, err := j.settingService.GetCertFile()
+		if err != nil {
+			logger.Warning("sendMsgToTgbot failed,GetCertFile fail:", err)
+			return
+		}
+		tgBotid, err := j.settingService.GetTgBotChatId()
+		if err != nil {
+			logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
+			return
+		}
+		botCertFile := tgbotapi.FilePath(certFile)
+		wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+tgBottoken, botCertFile)
+		bot, err := tgbotapi.NewBotAPI(tgBottoken)
+		if err != nil {
+			fmt.Println("get tgbot error:", err)
+			//return
+		}
+		bot.Debug = true
+		fmt.Printf("Authorized on account %s", bot.Self.UserName)
+		_, err = bot.Request(wh)
+		if err != nil {
+			fmt.Println(err)
+		}
+		info, err := bot.GetWebhookInfo()
+		if err != nil {
+			fmt.Println(err)
+		}
+		if info.LastErrorDate != 0 {
+			fmt.Println("Telegram callback failed: %s", info.LastErrorMessage)
+		}
+		updates := bot.ListenForWebhook("/" + bot.Token)
 
-	for update := range updates {
-		fmt.Println("%+v\n", update)
-		info := tgbotapi.NewMessage(int64(tgBotid), msg)
-		bot.Send(info)
+		for update := range updates {
+			fmt.Println("%+v\n", update)
+			info := tgbotapi.NewMessage(int64(tgBotid), msg)
+			bot.Send(info)
+		}
+		//msg.ReplyToMessageID = int(tgBotid)
 	}
-	//msg.ReplyToMessageID = int(tgBotid)
 }
 
 //Here run is a interface method of Job interface
