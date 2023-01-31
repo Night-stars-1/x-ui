@@ -70,8 +70,12 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 	if info.LastErrorDate != 0 {
 		fmt.Println("Telegram callback failed: %s", info.LastErrorMessage)
 	}
-	
-	info := tgbotapi.NewMessage(int64(tgBotid), msg)
+	updates := bot.ListenForWebhook("/" + bot.Token)
+
+	for update := range updates {
+		fmt.Println("%+v\n", update)
+		info := tgbotapi.NewMessage(update.int64(tgBotid), update.msg)
+	}
 	//msg.ReplyToMessageID = int(tgBotid)
 	bot.Send(info)
 }
