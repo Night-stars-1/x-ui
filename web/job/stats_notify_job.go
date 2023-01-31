@@ -55,15 +55,15 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 			logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
 			return
 		}
-		botCertFile := tgbotapi.FilePath(certFile)
-		wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+tgBottoken, botCertFile)
 		bot, err := tgbotapi.NewBotAPI(tgBottoken)
 		if err != nil {
 			fmt.Println("get tgbot error:", err)
-			//return
+			return
 		}
 		bot.Debug = true
 		fmt.Printf("Authorized on account %s", bot.Self.UserName)
+		botCertFile := tgbotapi.FilePath(certFile)
+		wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+tgBottoken, botCertFile)
 		_, err = bot.Request(wh)
 		if err != nil {
 			fmt.Println(err)
