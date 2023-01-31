@@ -53,7 +53,7 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 	bot, err := tgbotapi.NewBotAPI(tgBottoken)
 	if err != nil {
 		fmt.Println("get tgbot error:", err)
-		return
+		//return
 	}
 	bot.Debug = true
 	fmt.Printf("Authorized on account %s", bot.Self.UserName)
