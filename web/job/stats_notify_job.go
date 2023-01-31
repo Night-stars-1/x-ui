@@ -50,7 +50,7 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		return
 	}
 	botCertFile := tgbotapi.FilePath(certFile)
-	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, botCertFile)
+	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+tgBottoken, botCertFile)
 	bot, err := tgbotapi.NewBotAPI(tgBottoken)
 	if err != nil {
 		fmt.Println("get tgbot error:", err)
