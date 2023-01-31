@@ -49,29 +49,27 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
 		return
 	}
-
+	
 	bot, err := tgbotapi.NewBotAPI(tgBottoken)
 	if err != nil {
 		fmt.Println("get tgbot error:", err)
 		return
 	}
 	bot.Debug = true
-	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, "cert.pem")
-
+	fmt.Printf("Authorized on account %s", bot.Self.UserName)
+	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, certFile)
 	_, err = bot.Request(wh)
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	info, err := bot.GetWebhookInfo()
 	if err != nil {
 		fmt.Println(err)
 	}
-
 	if info.LastErrorDate != 0 {
 		fmt.Println("Telegram callback failed: %s", info.LastErrorMessage)
 	}
-	fmt.Printf("Authorized on account %s", bot.Self.UserName)
+	
 	info := tgbotapi.NewMessage(int64(tgBotid), msg)
 	//msg.ReplyToMessageID = int(tgBotid)
 	bot.Send(info)
