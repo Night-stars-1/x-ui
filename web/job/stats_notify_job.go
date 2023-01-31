@@ -57,7 +57,11 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 	}
 	bot.Debug = true
 	fmt.Printf("Authorized on account %s", bot.Self.UserName)
-	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, certFile)
+	wh, err := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, certFile)
+	if err != nil {
+		logger.Warning("sendMsgToTgbot failed,NewWebhookWithCert fail:", err)
+		return
+	}
 	_, err = bot.Request(wh)
 	if err != nil {
 		fmt.Println(err)
