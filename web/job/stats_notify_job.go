@@ -74,10 +74,10 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 
 	for update := range updates {
 		fmt.Println("%+v\n", update)
-		info := tgbotapi.NewMessage(update.int64(tgBotid), update.msg)
+		info := tgbotapi.NewMessage(int64(tgBotid), msg)
+		bot.Send(info)
 	}
 	//msg.ReplyToMessageID = int(tgBotid)
-	bot.Send(info)
 }
 
 //Here run is a interface method of Job interface
