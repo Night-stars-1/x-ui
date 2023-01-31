@@ -20,7 +20,9 @@ const (
 	LoginSuccess LoginStatus = 1
 	LoginFail    LoginStatus = 0
 )
-
+var (
+    bot = ''
+)
 type StatsNotifyJob struct {
 	enable         bool
 	xrayService    service.XrayService
@@ -49,11 +51,12 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
 		return
 	}
-	
-	bot, err := tgbotapi.NewBotAPI(tgBottoken)
-	if err != nil {
-		fmt.Println("get tgbot error:", err)
-		//return
+	if bot == '' {
+		bot, err := tgbotapi.NewBotAPI(tgBottoken)
+		if err != nil {
+			fmt.Println("get tgbot error:", err)
+			//return
+		}
 	}
 	bot.Debug = true
 	fmt.Printf("Authorized on account %s", bot.Self.UserName)
