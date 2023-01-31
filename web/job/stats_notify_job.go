@@ -39,6 +39,11 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		logger.Warning("sendMsgToTgbot failed,GetTgBotToken fail:", err)
 		return
 	}
+	certFile, err := j.settingService.GetCertFile()
+	if err != nil {
+		logger.Warning("sendMsgToTgbot failed,GetCertFile fail:", err)
+		return
+	}
 	tgBotid, err := j.settingService.GetTgBotChatId()
 	if err != nil {
 		logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
@@ -51,7 +56,7 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		return
 	}
 	bot.Debug = true
-	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token)
+	wh, _ := tgbotapi.NewWebhookWithCert("https://tg-bot-api.tssaltan.top/"+bot.Token, certFile)
 
 	_, err = bot.Request(wh)
 	if err != nil {
