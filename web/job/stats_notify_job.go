@@ -21,7 +21,7 @@ const (
 	LoginFail    LoginStatus = 0
 )
 var (
-    bot = ''
+    bot = ""
 )
 type StatsNotifyJob struct {
 	enable         bool
@@ -51,7 +51,7 @@ func (j *StatsNotifyJob) SendMsgToTgbot(msg string) {
 		logger.Warning("sendMsgToTgbot failed,GetTgBotChatId fail:", err)
 		return
 	}
-	if bot == '' {
+	if bot == "" {
 		bot, err := tgbotapi.NewBotAPI(tgBottoken)
 		if err != nil {
 			fmt.Println("get tgbot error:", err)
